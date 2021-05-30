@@ -1,0 +1,101 @@
+#include <iostream>
+#include <cstdlib>
+#include <time.h>
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int main()
+{
+	long long int n;
+	cin >> n;
+	long long int src[n];
+	long long int dst[n];
+	long long int arr[n][n];
+	for (long long int i = 0; i < n; i++)
+	{
+		dst[i] = i;
+	}
+	for (long long int i = 0; i < n; i++)
+	{
+		for (long long int j = 0; j < n; j++)
+		{
+			arr[i][j] = 0;
+		}
+	}
+	long long int top = 0;
+	src[0] = dst[0];
+	top++;
+	long long int i = 0;
+	while (top != (n))
+	{
+		srand(time(NULL));
+		long long int temp = rand() % (i + 1);
+		arr[src[temp]][dst[top]] = 1;
+		arr[dst[top]][src[temp]] = 1;
+		src[i + 1] = dst[top];
+		top++;
+		i++;
+	}
+	for (long long int i = 0; i < n; i++)
+	{
+		cout << "\n";
+		for (long long int j = 0; j < n; j++)
+		{
+			cout << arr[i][j] << " ";
+		}
+	}
+
+}
+struct Node
+{
+	int data;
+	struct Node* left, * right;
+};
+
+unsigned int getfullCount(struct Node* node)
+{
+	if (!node)
+		return 0;
+	queue<Node*> q;
+
+	int count = 0;
+	q.push(node);
+	while (!q.empty())
+	{
+		struct Node* temp = q.front();
+		q.pop();
+
+		if (temp->left && temp->right)
+			count++;
+
+		if (temp->left != NULL)
+			q.push(temp->left);
+		if (temp->right != NULL)
+			q.push(temp->right);
+	}
+	return count;
+}
+
+struct Node* newNode(int data)
+{
+	struct Node* node = new Node;
+	node->data = data;
+	node->left = node->right = NULL;
+	return (node);
+}
+
+int main(void) {
+	struct Node* root = newNode(2);
+	root->left = newNode(7);
+	root->right = newNode(5);
+	root->left->right = newNode(6);
+	root->left->right->left = newNode(1);
+	root->left->right->right = newNode(11);
+	root->right->right = newNode(9);
+	root->right->right->left = newNode(4);
+
+	cout << getfullCount(root);
+
+	return 0;
+}
